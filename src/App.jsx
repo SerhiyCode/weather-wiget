@@ -11,7 +11,8 @@ function App() {
   const [coords, setCoords] = useState(null); 
 
 
-  useEffect(()=> {
+  useEffect(()=> { 
+
     if(!navigator.geolocation){
       setError("Geolocation is not supported  by your browser");
       return 
@@ -29,7 +30,12 @@ function App() {
   }, [])
 
 
-  useEffect(() => {         
+  useEffect(() => {           
+    const controller  = new AbortController();
+    const signal  = controller.signal 
+    console.log(signal);
+    
+
     if(!city.trim() && !coords ) {
       setWeatherData(null);
       setError(null); 
@@ -61,9 +67,10 @@ function App() {
       setLoading(false);
     }  
   } 
+  getData();  
+  return ()=>{controller.abort()}
 
-  getData(); 
-}, [city]);
+}, [city, coords]);
     
 function renderError() {
   return <p>{error}</p>
@@ -89,7 +96,7 @@ function readerWeather() {
 }
 
   return ( 
-    <div className="app">
+    <div className="app"> 
       <div className="widget-container">          
         <div className="weather-card-container">
           <h1 className="app-title"> Weather  Widget </h1>
@@ -108,5 +115,9 @@ function readerWeather() {
     </div>
   );
 }
+
+
+
+
 
 export default App;
